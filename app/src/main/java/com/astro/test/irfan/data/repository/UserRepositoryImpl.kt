@@ -3,35 +3,30 @@ package com.astro.test.irfan.data.repository
 import com.astro.test.irfan.data.model.SearchUserResponse
 import com.astro.test.irfan.data.model.User
 import com.astro.test.irfan.data.network.RetrofitHelper
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import retrofit2.Response
 
 class UserRepositoryImpl : UserRepository {
 
     override suspend fun searchUsers(query: String): Response<SearchUserResponse> {
         val users = RetrofitHelper.apiService.searchUsers(query)
-        if (users.isSuccessful) {
+        return if (users.isSuccessful) {
             val usersWithName = users.body()?.items?.map {
-                val user = RetrofitHelper.apiService.getUser(it.login)
+                val user = getUser(it.login)
                 if (user.isSuccessful) {
                     user.body()
                 } else {
                     it
                 }
             }
-            return usersWithName?.let {
-                val userss = it.map {
-                    it as User
-                }
-                Response.success(SearchUserResponse(userss))
+            usersWithName?.let {
+                Response.success(SearchUserResponse(it.map { user -> user as User }))
             } ?: Response.success(SearchUserResponse(emptyList()))
         } else {
-            throw Exception("Error")
+            users
         }
     }
 
-    override suspend fun getUser(username: String): Response<User> {
+    private suspend fun getUser(username: String): Response<User> {
         return RetrofitHelper.apiService.getUser(username)
     }
 

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.astro.test.irfan.data.model.User
 import com.astro.test.irfan.data.repository.UserRepository
 import com.astro.test.irfan.data.repository.UserRepositoryImpl
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
@@ -16,14 +17,11 @@ class HomeViewModel(
 ) : ViewModel() {
 
     private val viewModelState = MutableStateFlow(HomeViewModelState(isLoading = true))
+    private var job: Job? = null
 
     val uiState = viewModelState
         .map { it.toUiState() }
-        .stateIn(
-            viewModelScope,
-            SharingStarted.Eagerly,
-            viewModelState.value.toUiState()
-        )
+        .stateIn(viewModelScope, SharingStarted.Eagerly, viewModelState.value.toUiState())
 
     fun updateSearchQuery(query: String) {
         viewModelScope.launch {
@@ -32,9 +30,10 @@ class HomeViewModel(
         }
     }
 
-    fun searchUser(query: String) {
+    private fun searchUser(query: String) {
         viewModelState.value = HomeViewModelState(isLoading = true)
-        viewModelScope.launch {
+        job?.run { if (isActive) cancel() }
+        job = viewModelScope.launch {
             val response = repository.searchUsers(query)
             if (response.isSuccessful) {
                 viewModelState.value = HomeViewModelState(
@@ -76,11 +75,10 @@ private data class HomeViewModelState(
     val searchInput: String = "",
     val users: List<User> = emptyList()
 ) {
-    fun toUiState(): HomeUiState {
-        return if (users.isEmpty()) {
-            HomeUiState.NoUsers(isLoading, isNoResult, searchInput)
-        } else {
-            HomeUiState.HasUsers(users, isLoading, isNoResult, searchInput)
-        }
+
+    fun toUiState(): HomeUiState = if (users.isEmpty()) {
+        HomeUiState.NoUsers(isLoading, isNoResult, searchInput)
+    } else {
+        HomeUiState.HasUsers(users, isLoading, isNoResult, searchInput)
     }
 }
