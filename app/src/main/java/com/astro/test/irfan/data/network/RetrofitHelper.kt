@@ -16,11 +16,17 @@ object RetrofitHelper {
     private val okHttpClient = OkHttpClient.Builder()
         .addInterceptor(Interceptor { chain ->
             val request = chain.request()
-            val newRequest = request.newBuilder()
-                .url(request.url)
-                .addHeader("Authorization", "Bearer ${BuildConfig.API_KEY}")
-                .addHeader("Accept", "application/vnd.github+json")
+
+            val newUrl = request.url.newBuilder()
+                .addQueryParameter("per_page", "5")
                 .build()
+
+            val newRequest = request.newBuilder()
+                .url(newUrl)
+                .addHeader("Authorization", "Bearer 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")
+//                .addHeader("Accept", "application/vnd.github+json")
+                .build()
+
             chain.proceed(newRequest)
         })
         .addInterceptor(HttpLoggingInterceptor().apply {

@@ -28,6 +28,7 @@ import com.astro.test.irfan.ui.theme.GithubUsersTheme
 @Composable
 fun SearchTextField(
     showClearIcon: Boolean = true,
+    onSearchInputChanged: (String) -> Unit
 ) {
     var query: String by rememberSaveable { mutableStateOf("") }
 
@@ -37,6 +38,7 @@ fun SearchTextField(
             query = onQueryChanged
             if (onQueryChanged.isNotEmpty()) {
                 // Perform search
+                onSearchInputChanged(onQueryChanged)
             }
         },
         leadingIcon = {
@@ -73,6 +75,6 @@ fun SearchTextField(
 @Composable
 fun DefaultPreview() {
     GithubUsersTheme {
-        SearchTextField()
+        SearchTextField(onSearchInputChanged = {})
     }
 }
