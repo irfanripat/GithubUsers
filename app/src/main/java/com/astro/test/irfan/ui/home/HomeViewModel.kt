@@ -16,26 +16,19 @@ class HomeViewModel(
     private val repository: UserRepository = UserRepositoryImpl.getInstance()
 ) : ViewModel() {
 
-    private val viewModelState = MutableStateFlow(HomeViewModelState(isLoading = true))
+    private val viewModelState = MutableStateFlow(HomeViewModelState(isLoading = false))
     private var job: Job? = null
 
     val uiState = viewModelState
         .map { it.toUiState() }
         .stateIn(viewModelScope, SharingStarted.Eagerly, viewModelState.value.toUiState())
 
-    fun updateSearchQuery(query: String) {
-        viewModelScope.launch {
-            viewModelState.value = viewModelState.value.copy(searchInput = query)
-            searchUser(query)
-        }
-    }
-
-    private fun searchUser(query: String) {
+    fun searchUser(query: String) {
         viewModelState.value = HomeViewModelState(isLoading = true)
         job?.run { if (isActive) cancel() }
         job = viewModelScope.launch {
             val response = repository.searchUsers(query)
-            if (response.isSuccessful) {
+            if (response.isSuccessful && !response.body()?.items.isNullOrEmpty()) {
                 viewModelState.value = HomeViewModelState(
                     isLoading = false,
                     users = response.body()?.items ?: emptyList()
@@ -48,37 +41,38 @@ class HomeViewModel(
             }
         }
     }
+
+    override fun onCleared() {
+        super.onCleared()
+        job?.cancel()
+    }
 }
 
 sealed interface HomeUiState {
     val isLoading: Boolean
     val isNoResult: Boolean
-    val searchInput: String
 
     data class HasUsers(
         val users: List<User>,
         override val isLoading: Boolean,
         override val isNoResult: Boolean,
-        override val searchInput: String
     ) : HomeUiState
 
     data class NoUsers(
         override val isLoading: Boolean,
         override val isNoResult: Boolean,
-        override val searchInput: String
     ) : HomeUiState
 }
 
 private data class HomeViewModelState(
     val isLoading: Boolean = false,
     val isNoResult: Boolean = false,
-    val searchInput: String = "",
     val users: List<User> = emptyList()
 ) {
 
     fun toUiState(): HomeUiState = if (users.isEmpty()) {
-        HomeUiState.NoUsers(isLoading, isNoResult, searchInput)
+        HomeUiState.NoUsers(isLoading, isNoResult)
     } else {
-        HomeUiState.HasUsers(users, isLoading, isNoResult, searchInput)
+        HomeUiState.HasUsers(users, isLoading, isNoResult)
     }
 }

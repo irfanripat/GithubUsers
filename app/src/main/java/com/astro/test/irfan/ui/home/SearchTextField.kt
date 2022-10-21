@@ -1,4 +1,4 @@
-package com.astro.test.irfan
+package com.astro.test.irfan.ui.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
+import com.astro.test.irfan.R
 import com.astro.test.irfan.ui.theme.GithubUsersTheme
 
 @Composable
@@ -37,7 +38,6 @@ fun SearchTextField(
         onValueChange = { onQueryChanged ->
             query = onQueryChanged
             if (onQueryChanged.isNotEmpty()) {
-                // Perform search
                 onSearchInputChanged(onQueryChanged)
             }
         },
