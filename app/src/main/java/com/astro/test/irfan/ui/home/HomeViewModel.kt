@@ -39,7 +39,13 @@ class HomeViewModel(
                 if (response.isSuccessful && users.isNotEmpty()) {
                     updateStateValue(State(isLoading = false, searchInput = query, users = users))
                 } else {
-                    updateStateValue(State(isLoading = false, searchInput = query))
+                    updateStateValue(
+                        State(
+                            isLoading = false,
+                            searchInput = query,
+                            isNoResult = true
+                        )
+                    )
                 }
             }
         }
