@@ -12,18 +12,20 @@ import retrofit2.converter.gson.GsonConverterFactory
 object RetrofitHelper {
 
     private const val BASE_URL = "https://api.github.com/"
+    private const val HEADER_AUTHORIZATION = "Authorization"
+    private const val PARAM_PER_PAGE = "per_page"
 
     private val okHttpClient = OkHttpClient.Builder()
         .addInterceptor(Interceptor { chain ->
             val request = chain.request()
 
             val newUrl = request.url.newBuilder()
-                .addQueryParameter("per_page", "5")
+                .addQueryParameter(PARAM_PER_PAGE, "5")
                 .build()
 
             val newRequest = request.newBuilder()
                 .url(newUrl)
-                .addHeader("Authorization", "Bearer ${BuildConfig.API_KEY}")
+                .addHeader(HEADER_AUTHORIZATION, "Bearer ${BuildConfig.API_KEY}")
                 .build()
 
             chain.proceed(newRequest)
