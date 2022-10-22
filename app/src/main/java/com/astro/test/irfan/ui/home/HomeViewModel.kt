@@ -61,7 +61,7 @@ class HomeViewModel(
     }
 }
 
-private data class HomeViewModelState(
+data class HomeViewModelState(
     val isLoading: Boolean = false,
     val isNoResult: Boolean = false,
     val searchInput: String = "",
@@ -71,7 +71,7 @@ private data class HomeViewModelState(
     fun toUiState(): HomeUiState = when {
         searchInput.isEmpty() -> HomeUiState.Empty
         isLoading -> HomeUiState.Loading
-        !isLoading && isNoResult -> HomeUiState.NoResult
+        !isLoading && isNoResult  -> HomeUiState.NoResult
         else -> HomeUiState.Success(users = users)
     }
 }
