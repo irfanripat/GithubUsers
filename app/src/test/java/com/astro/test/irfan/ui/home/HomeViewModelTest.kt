@@ -1,6 +1,5 @@
 package com.astro.test.irfan.ui.home
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.astro.test.lib_data.model.SearchUserResponse
 import com.astro.test.lib_data.model.User
 import com.astro.test.lib_data.repository.UserRepository
@@ -8,9 +7,7 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -21,22 +18,16 @@ import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
-import org.junit.rules.TestRule
 import retrofit2.Response
 
 @ExperimentalCoroutinesApi
 class HomeViewModelTest {
 
-    @get:Rule
-    var rule: TestRule = InstantTaskExecutorRule()
-
     private val repository = mockk<UserRepository>(relaxed = true)
     private lateinit var viewModel: HomeViewModel
 
-    private val testScope = TestScope()
-    private val testDispatcher = StandardTestDispatcher(testScope.testScheduler)
+    private val testDispatcher = StandardTestDispatcher()
 
     @Before
     fun setUp() {
@@ -47,7 +38,6 @@ class HomeViewModelTest {
     @After
     fun tearDown() {
         Dispatchers.resetMain()
-        testScope.cancel()
     }
 
     @Test
