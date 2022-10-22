@@ -37,9 +37,7 @@ fun SearchTextField(
         value = query,
         onValueChange = { onQueryChanged ->
             query = onQueryChanged
-            if (onQueryChanged.isNotEmpty()) {
-                onSearchInputChanged(onQueryChanged)
-            }
+            onSearchInputChanged(onQueryChanged)
         },
         leadingIcon = {
             Icon(
@@ -50,7 +48,10 @@ fun SearchTextField(
         },
         trailingIcon = {
             if (showClearIcon) {
-                IconButton(onClick = { query = "" }) {
+                IconButton(onClick = {
+                    query = ""
+                    onSearchInputChanged("")
+                }) {
                     Icon(
                         imageVector = Icons.Rounded.Clear,
                         tint = MaterialTheme.colors.onBackground,

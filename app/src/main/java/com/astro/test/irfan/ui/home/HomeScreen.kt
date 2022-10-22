@@ -59,7 +59,7 @@ fun HomeScreenBody(
             SearchTextField(onSearchInputChanged = onQueryChanged)
             Box(modifier = Modifier.fillMaxSize()) {
                 when (uiState) {
-                    is HomeUiState.HasUsers -> {
+                    is HomeUiState.Success -> {
                         LazyColumn(
                             modifier = Modifier.fillMaxSize()
                         ) {
@@ -68,11 +68,13 @@ fun HomeScreenBody(
                             }
                         }
                     }
-                    is HomeUiState.NoUsers -> {
+                    else -> {
                         Text(
-                            text = if (uiState.isLoading) stringResource(R.string.text_loading)
-                            else if (uiState.isNoResult) stringResource(R.string.text_no_user_found)
-                            else "",
+                            text = when (uiState) {
+                                is HomeUiState.Loading -> stringResource(R.string.text_loading)
+                                is HomeUiState.NoResult -> stringResource(R.string.text_no_user_found)
+                                else -> ""
+                            },
                             modifier = Modifier.align(Alignment.Center)
                         )
                     }
