@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.astro.test.lib_data.model.User
 import com.astro.test.lib_data.repository.UserRepository
 import com.astro.test.lib_data.repository.UserRepositoryImpl
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +17,8 @@ import kotlinx.coroutines.launch
 private typealias State = HomeViewModelState
 
 class HomeViewModel(
-    private val repository: UserRepository = UserRepositoryImpl.getInstance()
+    private val repository: UserRepository = UserRepositoryImpl.getInstance(),
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : ViewModel() {
 
     private val viewModelState = MutableStateFlow(State())
@@ -29,7 +31,7 @@ class HomeViewModel(
     fun searchUser(query: String) {
         updateStateValue(State(isLoading = true, searchInput = query))
         job?.cancel()
-        job = viewModelScope.launch(Dispatchers.IO) {
+        job = viewModelScope.launch(dispatcher) {
             if (query.isEmpty()) {
                 updateStateValue(State(isLoading = false, searchInput = query))
             } else {
@@ -71,7 +73,7 @@ data class HomeViewModelState(
     fun toUiState(): HomeUiState = when {
         searchInput.isEmpty() -> HomeUiState.Empty
         isLoading -> HomeUiState.Loading
-        !isLoading && isNoResult  -> HomeUiState.NoResult
+        !isLoading && isNoResult -> HomeUiState.NoResult
         else -> HomeUiState.Success(users = users)
     }
 }
