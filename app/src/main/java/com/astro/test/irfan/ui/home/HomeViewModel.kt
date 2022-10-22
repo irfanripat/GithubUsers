@@ -2,9 +2,9 @@ package com.astro.test.irfan.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.astro.test.irfan.data.model.User
-import com.astro.test.irfan.data.repository.UserRepository
-import com.astro.test.irfan.data.repository.UserRepositoryImpl
+import com.astro.test.lib_data.model.User
+import com.astro.test.lib_data.repository.UserRepository
+import com.astro.test.lib_data.repository.UserRepositoryImpl
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

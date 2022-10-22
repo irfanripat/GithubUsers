@@ -1,7 +1,7 @@
-package com.astro.test.irfan.data.network
+package com.astro.test.lib_data.network
 
-import com.astro.test.irfan.data.model.SearchUserResponse
-import com.astro.test.irfan.data.model.User
+import com.astro.test.lib_data.model.SearchUserResponse
+import com.astro.test.lib_data.model.User
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path

@@ -1,6 +1,6 @@
-package com.astro.test.irfan.data.network
+package com.astro.test.lib_data.network
 
-import com.astro.test.irfan.BuildConfig
+import com.astro.test.lib_data.BuildConfig
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
 import okhttp3.Interceptor
@@ -23,14 +23,13 @@ object RetrofitHelper {
 
             val newRequest = request.newBuilder()
                 .url(newUrl)
-                .addHeader("Authorization", "Bearer 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")
-//                .addHeader("Accept", "application/vnd.github+json")
+                .addHeader("Authorization", "Bearer ${BuildConfig.API_KEY}")
                 .build()
 
             chain.proceed(newRequest)
         })
         .addInterceptor(HttpLoggingInterceptor().apply {
-            setLevel(HttpLoggingInterceptor.Level.BODY)
+            setLevel(HttpLoggingInterceptor.Level.BASIC)
         })
         .build()
 

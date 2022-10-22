@@ -1,8 +1,8 @@
-package com.astro.test.irfan.data.repository
+package com.astro.test.lib_data.repository
 
-import com.astro.test.irfan.data.model.SearchUserResponse
-import com.astro.test.irfan.data.model.User
-import com.astro.test.irfan.data.network.RetrofitHelper
+import com.astro.test.lib_data.model.SearchUserResponse
+import com.astro.test.lib_data.model.User
+import com.astro.test.lib_data.network.RetrofitHelper
 import retrofit2.Response
 
 class UserRepositoryImpl : UserRepository {

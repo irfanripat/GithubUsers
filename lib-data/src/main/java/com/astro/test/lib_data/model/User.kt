@@ -1,4 +1,4 @@
-package com.astro.test.irfan.data.model
+package com.astro.test.lib_data.model
 
 data class User(
     val id: Int,

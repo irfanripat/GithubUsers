@@ -1,6 +1,6 @@
-package com.astro.test.irfan.data.repository
+package com.astro.test.lib_data.repository
 
-import com.astro.test.irfan.data.model.SearchUserResponse
+import com.astro.test.lib_data.model.SearchUserResponse
 import retrofit2.Response
 
 interface UserRepository {
