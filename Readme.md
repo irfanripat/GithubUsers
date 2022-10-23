@@ -16,4 +16,5 @@ This is a simple app that allows you to search for a Github user and see their p
 - Click on Open
 - Navigate to the extracted folder
 - Click on the folder
+- Because the zip file is manually compressed with local.properties included to make sure the git directory included, you may be asked to overwrite the local.properties file. Click on OK
 - Click on the green play button to run the app
